@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { ExerciseDataModel } from '../data/local/collections/Exercises';
-import { Exercise } from '../data/local/collections/Workouts';
+import { ExerciseDataModel } from '../data/firebase/collections/Exercises';
+import { Exercise } from '../data/firebase/collections/Workouts';
 
 interface Props {
   item: ExerciseDataModel;
