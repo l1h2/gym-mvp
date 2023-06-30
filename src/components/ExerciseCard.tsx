@@ -6,18 +6,17 @@ import { Exercise } from '../data/firebase/collections/Workouts';
 interface Props {
   item: ExerciseDataModel;
   selected?: boolean;
+  isEditEnabled?: boolean;
   onSelect?: (exercise: Exercise, isSelected: boolean) => void;
 }
 
 const ExerciseCard = (props: Props) => {
-  const {item, selected, onSelect} = props;
+  const {item, selected, isEditEnabled, onSelect} = props;
   const [isSelected, setSelected] = useState(selected || false);
 
   const onPress = (exercise: ExerciseDataModel) => {
-    if (onSelect) {
-      setSelected(!isSelected);
-      onSelect(exercise, isSelected);
-    }
+    isEditEnabled && setSelected(!isSelected);
+    onSelect && onSelect(exercise, isSelected);
   };
 
   return (
@@ -38,7 +37,7 @@ const ExerciseCard = (props: Props) => {
   );
 }
 
-export default ExerciseCard;
+export default React.memo(ExerciseCard);
 
 const styles = StyleSheet.create({
   cardContainer: {

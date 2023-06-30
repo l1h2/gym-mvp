@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { Pressable, Image, StyleSheet } from 'react-native';
-import { OnboardingScreenProp } from '../../navigation/types';
-import { auth } from '../../data/firebase/firebase';
-import { useAppDispatch } from '../../redux/AppStore';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../../redux/AppStore';
 import { getExercisesThunk } from '../../redux/actions/ExerciseActions';
+import { auth } from '../../data/firebase/firebase';
+import { OnboardingScreenProp } from '../../navigation/types';
 
 function Onboarding({navigation}: OnboardingScreenProp) {
+  const exercises = useSelector((state: RootState) => state.exercise.exerciseList);
   const dispatch = useAppDispatch();
   const [isAppLoaded, setAppLoaded] = useState(false);
 
@@ -20,7 +22,7 @@ function Onboarding({navigation}: OnboardingScreenProp) {
   }, [navigateNextScreen, isAppLoaded]);
 
   const loadApp = useCallback(() => {
-    dispatch(getExercisesThunk());
+    !exercises[0] && dispatch(getExercisesThunk());    
     setAppLoaded(true);
   }, []);
 

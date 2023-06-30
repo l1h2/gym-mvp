@@ -1,41 +1,16 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../../../redux/AppStore';
 import { editWorkoutPlanAction, getWorkoutPlansThunk } from '../../../redux/actions/WorkoutActions';
 
 import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BottomBarChildScreenProp } from '../../../navigation/types';
+import { WorkoutsStackChildScreenProp } from '../../../navigation/types';
 import { WorkoutDay, WorkoutPlanDataModel } from '../../../data/firebase/collections/Workouts';
-
-interface CardProps {
-  workoutDay: WorkoutDay;
-  navigation: BottomBarChildScreenProp;
-  index: number;
-}
-
-const WorkoutDayCard = (props: CardProps) => {
-  const {workoutDay, navigation, index} = props;
-
-  return (
-    <View style={styles.cardContainer}>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('update_workout_day_modal', {
-            workoutDay: {plan: workoutDay, index: index},
-            isEditPlan: true,
-          }
-        )}
-        style={[styles.button, styles.buttonOutline]}
-      >
-        <Text style={styles.buttonOutlineText}>{workoutDay.name}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+import WorkoutDayCard from '../../../components/WorkoutDayCard';
 
 interface Props {
-  navigation: BottomBarChildScreenProp;
+  navigation: WorkoutsStackChildScreenProp;
 }
 
 const WorkoutHome = ({navigation}: Props) => {
@@ -49,8 +24,18 @@ const WorkoutHome = ({navigation}: Props) => {
 
   const onAddWorkoutDay = useCallback(() => {
     dispatch(editWorkoutPlanAction(activePlan));
-    navigation.navigate('update_workout_day_modal');
+    navigation.navigate(
+      'update_workout_day_modal_stack',
+      {
+        screen: 'update_workout_day_modal',
+        params: {handlePlanEdit: true}
+      }
+    );
   }, [activePlan]);
+
+  const onSelectWorkoutDay = useCallback((workoutRef: {workoutDay: WorkoutDay, index: number}) => {
+    navigation.navigate('workout_day_details', {workoutRef: workoutRef});
+  }, []);
 
   return (
     <>
@@ -62,15 +47,15 @@ const WorkoutHome = ({navigation}: Props) => {
         </View>
       </View>
       <FlatList
-          data={activePlan.workoutDays}
-          renderItem={({item, index}) =>
-            <WorkoutDayCard
-              workoutDay={item}
-              navigation={navigation}
-              index={index}
-            />
-          }
-        />
+        data={activePlan.workoutDays}
+        renderItem={({item, index}) =>
+          <WorkoutDayCard
+            workoutDay={item}
+            index={index}
+            onSelect={onSelectWorkoutDay}
+          />
+        }
+      />
       <View style={styles.buttonContainer}>
         <MCIIcon size={60} name='plus-circle' color='#0782F9' onPress={onAddWorkoutDay} />
       </View>
@@ -99,36 +84,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 32,
   },
-  cardContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
   buttonContainer: {
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'flex-end',
     alignSelf: 'flex-end',
     margin: 20,
-  },
-  button: {
-    backgroundColor: '#0782F9',
-    width: '60%',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  buttonOutline: {
-    backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: '#0782F9',
-    borderWidth: 2,
-  },
-  buttonOutlineText: {
-    color: '#0782F9',
-    fontWeight: '700',
-    fontSize: 16,
   },
 });

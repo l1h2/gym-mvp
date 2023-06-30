@@ -1,12 +1,18 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { WorkoutDay, WorkoutPlanDataModel } from '../data/firebase/collections/Workouts';
+import { Exercise, WorkoutDay, WorkoutPlanDataModel } from '../data/firebase/collections/Workouts';
 import { ExerciseDataModel } from '../data/firebase/collections/Exercises';
+
+export type WorkoutsStackParamList = {
+    workouts_main: undefined;
+    workout_day_details: {workoutRef: {workoutDay: WorkoutDay, index: number}};
+    exercise_details: {exercise: Exercise};
+};
 
 export type BottomBarParamList = {
     bottom_bar_home: undefined;
-    bottom_bar_workouts: undefined;
+    bottom_bar_workouts: NavigatorScreenParams<WorkoutsStackParamList>;
     bottom_bar_calendar: undefined;
     bottom_bar_settings: undefined;
 };
@@ -14,6 +20,11 @@ export type BottomBarParamList = {
 export type ExerciseStackParamList = {
     search_exercise: undefined;
     filtered_exercises: {exercises: ExerciseDataModel[]};
+};
+
+export type UpdateWorkoutDayStackParamList = {
+    update_workout_day_modal?: {workoutRef?: {workoutDay: WorkoutDay, index: number}, handlePlanEdit?: boolean};
+    update_exercise_details: {exercise: Exercise};
 };
 
 export type RootStackParamList = {
@@ -26,7 +37,7 @@ export type RootStackParamList = {
     language_selection_modal: undefined;
     update_workout_plan_modal?: {workoutPlan: WorkoutPlanDataModel};
     select_workout_plan_modal: undefined;
-    update_workout_day_modal?: {workoutDay?: {plan: WorkoutDay, index: number}, isEditPlan: boolean};
+    update_workout_day_modal_stack: NavigatorScreenParams<UpdateWorkoutDayStackParamList>;
 };
 
 export type OnboardingScreenProp = NativeStackScreenProps<
@@ -49,11 +60,6 @@ export type SignupScreenProp = NativeStackScreenProps<
     'signup'
 >;
 
-export type BottomBarProp = NativeStackScreenProps<
-    RootStackParamList,
-    'bottom_bar'
->;
-
 export type LanguageSelectionModalProp = NativeStackScreenProps<
     RootStackParamList,
     'language_selection_modal'
@@ -69,9 +75,19 @@ export type SelectWorkoutPlanModalProp = NativeStackScreenProps<
     'select_workout_plan_modal'
 >;
 
-export type UpdateWorkoutDayModalProp = NativeStackScreenProps<
-    RootStackParamList,
-    'update_workout_day_modal'
+export type WorkoutsMainScreenProp = CompositeScreenProps<
+    NativeStackScreenProps<WorkoutsStackParamList, 'workouts_main'>,
+    NativeStackScreenProps<RootStackParamList>
+>;
+
+export type WorkoutDayDetailsScreenProp = CompositeScreenProps<
+    NativeStackScreenProps<WorkoutsStackParamList, 'workout_day_details'>,
+    NativeStackScreenProps<RootStackParamList>
+>;
+
+export type ExercisesDetailsScreenProp = CompositeScreenProps<
+    NativeStackScreenProps<WorkoutsStackParamList, 'exercise_details'>,
+    NativeStackScreenProps<RootStackParamList>
 >;
 
 export type HomeScreenProp = CompositeScreenProps<
@@ -95,14 +111,29 @@ export type SettingsScreenProp = CompositeScreenProps<
 >;
 
 export type SearchExerciseModalProp = CompositeScreenProps<
-    BottomTabScreenProps<ExerciseStackParamList, 'search_exercise'>,
+    NativeStackScreenProps<ExerciseStackParamList, 'search_exercise'>,
     NativeStackScreenProps<RootStackParamList>
 >;
 
 export type FilteredExercisesModalProp = CompositeScreenProps<
-    BottomTabScreenProps<ExerciseStackParamList, 'filtered_exercises'>,
+    NativeStackScreenProps<ExerciseStackParamList, 'filtered_exercises'>,
     NativeStackScreenProps<RootStackParamList>
 >;
+
+export type UpdateWorkoutDayModalProp = CompositeScreenProps<
+    NativeStackScreenProps<UpdateWorkoutDayStackParamList, 'update_workout_day_modal'>,
+    NativeStackScreenProps<RootStackParamList>
+>;
+
+export type ExerciseDetailsModalProp = CompositeScreenProps<
+    NativeStackScreenProps<UpdateWorkoutDayStackParamList, 'update_exercise_details'>,
+    NativeStackScreenProps<RootStackParamList>
+>;
+
+export type WorkoutsStackChildScreenProp =
+    | WorkoutsMainScreenProp['navigation']
+    | WorkoutDayDetailsScreenProp['navigation']
+    | ExercisesDetailsScreenProp['navigation']
 
 export type BottomBarChildScreenProp =
     | HomeScreenProp['navigation']
@@ -114,8 +145,11 @@ export type ExerciseStackChildScreenProp =
     | SearchExerciseModalProp['navigation']
     | FilteredExercisesModalProp['navigation']
 
+export type WorkoutDayStackChildScreenProp =
+    | UpdateWorkoutDayModalProp['navigation']
+    | ExerciseDetailsModalProp['navigation']
+
 export type RootChildScreenProp =
     | LanguageSelectionModalProp['navigation']
     | UpdateWorkoutPlanModalProp['navigation']
     | SelectWorkoutPlanModalProp['navigation']
-    | UpdateWorkoutDayModalProp['navigation'];

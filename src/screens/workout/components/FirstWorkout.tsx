@@ -3,10 +3,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/AppStore';
 import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BottomBarChildScreenProp } from '../../../navigation/types';
+import { WorkoutsStackChildScreenProp } from '../../../navigation/types';
 
 interface Props {
-  navigation: BottomBarChildScreenProp;
+  navigation: WorkoutsStackChildScreenProp;
 }
 
 const AddWorkout = ({navigation}: Props) => {

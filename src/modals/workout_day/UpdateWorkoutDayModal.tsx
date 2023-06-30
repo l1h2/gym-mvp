@@ -1,14 +1,14 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { FlatList, Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState, useAppDispatch } from '../redux/AppStore';
+import { RootState, useAppDispatch } from '../../redux/AppStore';
 import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UpdateWorkoutDayModalProp } from '../navigation/types';
-import { WorkoutDay, WorkoutPlanDataModel } from '../data/firebase/collections/Workouts';
-import { addWorkoutPlanThunk, editWorkoutDayAction, editWorkoutPlanAction } from '../redux/actions/WorkoutActions';
-import { setActiveWorkoutPlanAction } from '../redux/actions/UserActions';
-import ExerciseCard from '../components/ExerciseCard';
+import { UpdateWorkoutDayModalProp } from '../../navigation/types';
+import { Exercise, WorkoutDay, WorkoutPlanDataModel } from '../../data/firebase/collections/Workouts';
+import { addWorkoutPlanThunk, editWorkoutDayAction, editWorkoutPlanAction } from '../../redux/actions/WorkoutActions';
+import { setActiveWorkoutPlanAction } from '../../redux/actions/UserActions';
+import ExerciseCard from '../../components/ExerciseCard';
 
 function UpdateWorkoutDayModal({route, navigation}: UpdateWorkoutDayModalProp) {
   const language = useSelector((state: RootState) => state.user.language);
@@ -16,16 +16,14 @@ function UpdateWorkoutDayModal({route, navigation}: UpdateWorkoutDayModalProp) {
   const dispatch = useAppDispatch();
 
   const [index, setIndex] = useState(0);
-  const [planEdit, setPlanEdit] = useState(false);
+  const handlePlanEdit = route.params?.handlePlanEdit || false;
   const workoutDays: WorkoutDay[] = JSON.parse(JSON.stringify(workoutPlan.workoutDays));
 
   useEffect(() => {
     const getWorkoutDay = () => {
-      route.params?.isEditPlan && setPlanEdit(true);
-
-      if (route.params?.workoutDay) {
-        setIndex(route.params.workoutDay.index);
-        return route.params.workoutDay.plan;
+      if (route.params?.workoutRef) {
+        setIndex(route.params.workoutRef.index);
+        return route.params.workoutRef.workoutDay;
       };
 
       setIndex(workoutDays.length);
@@ -49,7 +47,7 @@ function UpdateWorkoutDayModal({route, navigation}: UpdateWorkoutDayModalProp) {
     if (!workoutDay.name) {return}
     workoutDays[index] = workoutDay;
     const newPlan = {...workoutPlan, workoutDays: workoutDays};
-    if (!planEdit) {
+    if (handlePlanEdit) {
       dispatch(addWorkoutPlanThunk(newPlan));
       dispatch(setActiveWorkoutPlanAction(newPlan));
     } else {
@@ -57,6 +55,10 @@ function UpdateWorkoutDayModal({route, navigation}: UpdateWorkoutDayModalProp) {
     }
     navigation.pop();
   }, [workoutDay]);
+
+  const onSelectExercise = useCallback((exercise: Exercise) => {
+    navigation.navigate('update_exercise_details', {exercise: exercise})
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -79,7 +81,7 @@ function UpdateWorkoutDayModal({route, navigation}: UpdateWorkoutDayModalProp) {
         </View>
         <FlatList
           data={workoutDay.exercises}
-          renderItem={({item}) => <ExerciseCard item={item}/>}
+          renderItem={({item}) => <ExerciseCard item={item} onSelect={onSelectExercise} />}
         />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

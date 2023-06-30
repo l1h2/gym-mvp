@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/AppStore';
-import { WorkoutsScreenProp } from '../../navigation/types';
+import { WorkoutsMainScreenProp } from '../../navigation/types';
 import FirstWorkout from './components/FirstWorkout';
 import WorkoutHome from './components/WorkoutHome';
 import { WorkoutPlanDataModel } from '../../data/firebase/collections/Workouts';
 
-const Workouts = ({navigation}: WorkoutsScreenProp) => {
+const Workouts = ({navigation}: WorkoutsMainScreenProp) => {
   const activePlan = useSelector((state: RootState) => state.user.activeWorkoutPlan) as WorkoutPlanDataModel;
   
   return (
@@ -17,7 +17,7 @@ const Workouts = ({navigation}: WorkoutsScreenProp) => {
   );
 }
 
-export default memo(Workouts);
+export default Workouts;
 
 const styles = StyleSheet.create({
   container: {

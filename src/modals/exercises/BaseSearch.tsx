@@ -83,6 +83,7 @@ function BaseSearch(props: Props) {
             renderItem={({item}) =>
               <ExerciseCard
                 item={item}
+                isEditEnabled={true}
                 selected={isSelected(item)}
                 onSelect={onSelectExercise}
               />

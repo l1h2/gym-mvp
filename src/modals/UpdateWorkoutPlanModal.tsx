@@ -7,37 +7,12 @@ import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { addWorkoutPlanThunk, editWorkoutPlanAction } from '../redux/actions/WorkoutActions';
 import { setActiveWorkoutPlanAction } from '../redux/actions/UserActions';
 
-import { RootChildScreenProp, UpdateWorkoutPlanModalProp } from '../navigation/types';
+import { UpdateWorkoutPlanModalProp } from '../navigation/types';
 import { WorkoutDay, WorkoutPlanDataModel } from '../data/firebase/collections/Workouts';
 import { collection, doc } from 'firebase/firestore';
 import { db } from '../data/firebase/firebase';
 import { CollectionName } from '../data/firebase/CollectionName';
-
-interface Props {
-  workoutDay: WorkoutDay;
-  navigation: RootChildScreenProp;
-  index: number;
-}
-
-const WorkoutDayCard = (props: Props) => {
-  const {workoutDay, navigation, index} = props;
-
-  return (
-    <View style={styles.cardContainer}>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('update_workout_day_modal', {
-            workoutDay: {plan: workoutDay, index: index},
-            isEditPlan: true,
-          }
-        )}
-        style={[styles.button, styles.buttonOutline]}
-      >
-        <Text style={styles.buttonOutlineText}>{workoutDay.name}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+import WorkoutDayCard from '../components/WorkoutDayCard';
 
 function UpdateWorkoutPlanModal({route, navigation}: UpdateWorkoutPlanModalProp) {
   const language = useSelector((state: RootState) => state.user.language);
@@ -72,6 +47,13 @@ function UpdateWorkoutPlanModal({route, navigation}: UpdateWorkoutPlanModalProp)
     }
   }, [workoutPlan]);
 
+  const onWorkoutDayUpdate = useCallback((workoutRef?: {workoutDay: WorkoutDay, index: number}) => {
+    navigation.navigate(
+      'update_workout_day_modal_stack',
+      {screen: 'update_workout_day_modal', params: {workoutRef: workoutRef}}
+    );
+  }, []);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -86,9 +68,8 @@ function UpdateWorkoutPlanModal({route, navigation}: UpdateWorkoutPlanModalProp)
           <MCIIcon size={30} name='check' color='#666' onPress={onSaveWorkoutPlan} />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('update_workout_day_modal', {isEditPlan: true})} style={[styles.button]}>
+          <TouchableOpacity onPress={() => onWorkoutDayUpdate()} style={[styles.button]}>
             <MCIIcon size={30} name={'plus-circle-outline'} color='#fff' />
-            <Text style={styles.buttonText}> Add workout day</Text>
           </TouchableOpacity>
         </View>
         <FlatList
@@ -96,8 +77,8 @@ function UpdateWorkoutPlanModal({route, navigation}: UpdateWorkoutPlanModalProp)
           renderItem={({item, index}) =>
             <WorkoutDayCard
               workoutDay={item}
-              navigation={navigation}
               index={index}
+              onSelect={onWorkoutDayUpdate}
             />
           }
         />
@@ -122,13 +103,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 30,
   },
-  cardContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
   input: {
     width: '70%',
     borderBottomWidth: 1,
@@ -151,21 +125,5 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  buttonOutline: {
-    backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: '#0782F9',
-    borderWidth: 2,
-  },
-  buttonOutlineText: {
-    color: '#0782F9',
-    fontWeight: '700',
-    fontSize: 16,
   },
 });

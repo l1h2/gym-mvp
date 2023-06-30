@@ -75,23 +75,27 @@ class BaseDao {
     };
 
     async collectionRead<T>(collectionName: string): Promise<T | void> {
-        const q = query(collection(db, collectionName));
         const result: (T | DocumentData)[] = [];
         try {
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc)=>{result.push(doc.data())});
+            const querySnapshot = await getDocs(collection(db, collectionName));
+            querySnapshot.forEach(doc => result.push(doc.data()));
             return result as T;
         } catch(err: any) {
             alert(err.message);
         }
     };
 
-    async collectionQueryByField<T>(collectionName: string, fieldName: string, fieldValues: string[], maxResults: number): Promise<T | void> {
+    async collectionQueryByField<T>(
+        collectionName: string,
+        fieldName: string,
+        fieldValues: string[],
+        maxResults: number
+    ): Promise<T | void> {
         const q = query(collection(db, collectionName), where(fieldName, 'in', fieldValues), limit(maxResults));
         const result: (T | DocumentData)[] = [];
         try {
             const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc)=>{result.push(doc.data())});
+            querySnapshot.forEach(doc => result.push(doc.data()));
             return result as T;
         } catch(err: any) {
             alert(err.message);
