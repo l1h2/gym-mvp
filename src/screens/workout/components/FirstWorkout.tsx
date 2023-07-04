@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/AppStore';
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import { WorkoutsStackChildScreenProp } from '../../../navigation/types';
 
 interface Props {

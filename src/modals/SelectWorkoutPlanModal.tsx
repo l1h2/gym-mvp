@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Alert, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../redux/AppStore';
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { setActiveWorkoutPlanAction } from '../redux/actions/UserActions';
 

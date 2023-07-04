@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { RootState } from '../../redux/AppStore';
 import { LoginScreenProp } from '../../navigation/types';

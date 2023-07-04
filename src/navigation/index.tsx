@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/AppStore';
 import { User } from 'firebase/auth';

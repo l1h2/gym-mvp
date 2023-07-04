@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../../../redux/AppStore';
 import { editWorkoutPlanAction, getWorkoutPlansThunk } from '../../../redux/actions/WorkoutActions';
 
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import { WorkoutsStackChildScreenProp } from '../../../navigation/types';
 import { WorkoutDay, WorkoutPlanDataModel } from '../../../data/firebase/collections/Workouts';
 import WorkoutDayCard from '../../../components/WorkoutDayCard';

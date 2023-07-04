@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, SafeAreaView, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/AppStore';
 
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import { ExercisesDetailsScreenProp } from '../../navigation/types';
 import { WorkoutPlanDataModel } from '../../data/firebase/collections/Workouts';
 

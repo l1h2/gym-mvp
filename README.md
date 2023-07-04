@@ -24,6 +24,7 @@ Exercise DB (https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb)
 - Add a classes/activities pages with calendar functionality
 - Set up account linking and registration options
 - Add more functionalities to the active workout and workout tracker flow
+- Change icon imports for the already available ones with expo
 - Set up other authentication providers (Expo Go testing environment is not compatible with native code)
 - Add dark theme option
 - Clean up the design
